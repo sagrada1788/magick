@@ -277,6 +277,19 @@ do
   })
   _base_0.__class = _class_0
   local self = _class_0
+  self.new = function(self, w, h, color)
+    local wand = ffi.gc(lib.NewMagickWand(), lib.DestroyMagickWand)
+    local pixel_wand = ffi.gc(lib.NewPixelWand(), lib.DestroyPixelWand)
+    assert(lib.PixelSetColor(pixel_wand, color), "failed to PixelSetColor")
+    local ok = lib.MagickNewImage(wand, w, h, pixel_wand)
+    lib.DestroyPixelWand(ffi.gc(pixel_wand, nil))
+    pixel_wand = nil
+    if 0 == ok then
+      local code, msg = get_exception(wand)
+      return nil, msg, code
+    end
+    return self(wand)
+  end
   self.load = function(self, path)
     local wand = ffi.gc(lib.NewMagickWand(), lib.DestroyMagickWand)
     if 0 == lib.MagickReadImage(wand, path) then

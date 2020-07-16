@@ -9,6 +9,9 @@ local load_image
 do
   local _base_0 = Image
   local _fn_0 = _base_0.load
+  new_image = function(...)
+    return _base_0.new(_base_0, ...)
+  end 
   load_image = function(...)
     return _fn_0(_base_0, ...)
   end
@@ -17,6 +20,7 @@ return {
   VERSION = require("magick.version"),
   mode = "image_magick",
   Image = Image,
+  new_image = new_image,
   load_image = load_image,
   thumb = make_thumb(load_image),
   load_image_from_blob = (function()
